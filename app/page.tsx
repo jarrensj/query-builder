@@ -8,7 +8,7 @@ export default function Home() {
     <div className="flex min-h-screen flex-col">
       <main className="flex flex-1 flex-col items-center p-24">
         <h1 className="text-2xl font-bold text-center">
-          twitter query builder tool
+          query builder tool
         </h1>
         <p className="text-center">
           A tool to help you search for tweets on Twitter.
