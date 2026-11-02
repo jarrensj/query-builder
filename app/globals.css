@@ -28,9 +28,9 @@
     @apply mb-1.5 block text-[13px] font-medium text-ink-secondary;
   }
 
-  /* TODO: iOS Safari zooms in when focusing fields under 16px and the design uses 15px; check on a real iPhone. */
+  /* 16px on touch devices because iOS Safari zooms the page when focusing fields under 16px. */
   .field-input {
-    @apply block w-full rounded-md border border-line-strong bg-white px-[11px] py-2 text-[15px] text-ink outline-none placeholder:text-placeholder focus:border-accent focus:shadow-focus;
+    @apply block w-full rounded-md border border-line-strong bg-white px-[11px] py-2 text-[15px] text-ink outline-none placeholder:text-placeholder focus:border-accent focus:shadow-focus [@media(pointer:coarse)]:text-[16px];
   }
 
   .button-primary {

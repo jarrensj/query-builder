@@ -67,7 +67,7 @@ const ToolSwitcher = () => {
               id="tool"
               value={activeTool}
               onChange={(e) => selectTool(Number(e.target.value))}
-              className="block w-full cursor-pointer appearance-none rounded-lg border border-line-strong bg-white py-2.5 pl-3.5 pr-10 text-[15px] font-medium text-ink outline-none focus:border-accent focus:shadow-focus"
+              className="block w-full cursor-pointer appearance-none rounded-lg border border-line-strong bg-white py-2.5 pl-3.5 pr-10 text-[15px] font-medium text-ink outline-none focus:border-accent focus:shadow-focus [@media(pointer:coarse)]:text-[16px]"
             >
               {tools.map(({ label }, index) => (
                 <option key={label} value={index}>
