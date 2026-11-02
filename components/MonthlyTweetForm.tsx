@@ -82,95 +82,94 @@ const MonthlyTweetForm = () => {
   };
 
   return (
-    <>
-      <div className="mt-8 w-full max-w-md">
-        <h2 className="text-lg font-bold mb-4 text-center">
-          Monthly Tweet Summary
-        </h2>
-        <div className="mb-4">
-          <div className="mb-4">
-            <label htmlFor="handle-monthly" className="block mb-2">
-              Twitter Handle:
+    <div className="w-full">
+      <p className="text-sm text-zinc-500 mb-4">
+        Find all tweets from a user in a specific month
+      </p>
+      
+      <div className="space-y-4">
+        <div>
+          <label htmlFor="handle-monthly" className="block text-sm font-medium text-zinc-700 mb-1.5">
+            Twitter Handle
+          </label>
+          <input
+            type="text"
+            id="handle-monthly"
+            value={handle}
+            onChange={handleHandleChange}
+            className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            placeholder="jarrensj"
+          />
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label htmlFor="month" className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Month
             </label>
-            <input
-              type="text"
-              id="handle-monthly"
-              value={handle}
-              onChange={handleHandleChange}
-              className="border p-2 w-full rounded"
-              placeholder="jarrensj"
-            />
+            <select
+              id="month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+            >
+              <option value="">Select Month</option>
+              {months.map((m) => (
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
           </div>
           
-          <div className="mb-4 grid grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="month" className="block mb-2">
-                Month:
-              </label>
-              <select
-                id="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                className="border p-2 w-full rounded"
-              >
-                <option value="">Select Month</option>
-                {months.map((m) => (
-                  <option key={m.value} value={m.value}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            
-            <div>
-              <label htmlFor="year" className="block mb-2">
-                Year:
-              </label>
-              <select
-                id="year"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="border p-2 w-full rounded"
-              >
-                <option value="">Select Year</option>
-                {years.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div>
+            <label htmlFor="year" className="block text-sm font-medium text-zinc-700 mb-1.5">
+              Year
+            </label>
+            <select
+              id="year"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="w-full px-3 py-2 border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors bg-white"
+            >
+              <option value="">Select Year</option>
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
       
       {isLoading && (
-        <div className="mt-4 w-full max-w-md">
-          <div className="bg-gray-100 p-4 rounded animate-pulse">
-            <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-300 rounded w-1/2"></div>
+        <div className="mt-6">
+          <div className="bg-zinc-100 p-4 rounded-lg animate-pulse">
+            <div className="h-4 bg-zinc-300 rounded w-3/4 mb-2"></div>
+            <div className="h-3 bg-zinc-300 rounded w-1/2"></div>
           </div>
         </div>
       )}
       
       {!isLoading && query && (
-        <div className="mt-4 w-full max-w-md">
-          <div className="bg-gray-100 p-4 rounded">
-            <p className="mb-2 font-semibold">
-              Search for tweets from @{handle} in {getMonthName(month)} {year}:
+        <div className="mt-6">
+          <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg">
+            <p className="text-sm font-medium text-zinc-700 mb-2">
+              Tweets from @{handle} in {getMonthName(month)} {year}:
             </p>
             <Link
               href={query}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-500 hover:text-blue-700 underline break-all text-sm"
+              className="inline-flex items-center text-blue-600 hover:text-blue-700 font-medium text-sm transition-colors"
             >
               Open Twitter Search →
             </Link>
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
