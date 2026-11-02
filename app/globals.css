@@ -1,3 +1,39 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .card {
+    @apply mt-4 overflow-hidden rounded-[10px] border border-line bg-white;
+  }
+
+  .card-title {
+    @apply border-b border-line-soft px-5 py-3.5 text-[15px] font-semibold;
+  }
+
+  .card-body {
+    @apply grid gap-4 p-5;
+  }
+
+  .card-footer {
+    @apply flex justify-end border-t border-line-soft bg-surface-muted px-5 py-3;
+  }
+
+  /* Two fields side by side, collapsing to one column when they no longer fit. */
+  .field-row {
+    @apply grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-[13px] font-medium text-ink-secondary;
+  }
+
+  /* TODO: iOS Safari zooms in when focusing fields under 16px and the design uses 15px; check on a real iPhone. */
+  .field-input {
+    @apply block w-full rounded-md border border-line-strong bg-white px-[11px] py-2 text-[15px] text-ink outline-none placeholder:text-placeholder focus:border-accent focus:shadow-focus;
+  }
+
+  .button-primary {
+    @apply rounded-md bg-accent px-4 py-2 text-[14px] font-medium text-white hover:bg-accent-hover;
+  }
+}

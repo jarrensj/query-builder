@@ -1,12 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import ResultCard from './ResultCard';
 
 const Form = () => {
   const [handle, setHandle] = useState('');
   const [keywords, setKeywords] = useState(''); // all required keywords that must be found in the tweet
   const [query, setQuery] = useState('');
+  const [submitCount, setSubmitCount] = useState(0);
 
   // Load handle from localStorage on component mount
   useEffect(() => {
@@ -42,60 +43,52 @@ const Form = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setQuery(buildQuery());
+    setSubmitCount((count) => count + 1);
   };
 
   return (
     <>
-      <div className="mt-4">
-        <form onSubmit={handleSubmit} className="mb-4">
-          <div className="mb-4">
-            <label htmlFor="handle" className="block mb-2">
-              Tweet by:
-            </label>
-            <input
-              type="text"
-              id="handle"
-              value={handle}
-              onChange={handleHandleChange}
-              className="border p-2 w-full"
-              placeholder="jarrensj"
-            />
+      <section className="card">
+        <form onSubmit={handleSubmit}>
+          <div className="card-body">
+            <div>
+              <label htmlFor="handle" className="field-label">
+                Tweet by:
+              </label>
+              <input
+                type="text"
+                id="handle"
+                value={handle}
+                onChange={handleHandleChange}
+                className="field-input"
+                placeholder="jarrensj"
+                autoComplete="off"
+                spellCheck={false}
+              />
+            </div>
+            <div>
+              <label htmlFor="keywords" className="field-label">
+                All these words must be found in the tweet:
+              </label>
+              <input
+                type="text"
+                id="keywords"
+                value={keywords}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeywords(e.target.value)}
+                className="field-input"
+                placeholder="hi"
+                autoComplete="off"
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label htmlFor="keywords" className="block mb-2">
-              All these words must be found in the tweet:
-            </label>
-            <input
-              type="text"
-              id="keywords"
-              value={keywords}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeywords(e.target.value)}
-              className="border p-2 w-full"
-              placeholder="hi"
-            />
-          </div>
-          <div className="mb-4">
-            <button
-              type="submit"
-              className="w-full p-2 bg-blue-600 text-white"
-            > 
+          <div className="card-footer">
+            <button type="submit" className="button-primary">
               Generate
             </button>
           </div>
         </form>
-      </div>
-      {query && (
-        <div className="mt-4 break-words text-xs flex-wrap">
-          <Link
-            href={query}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 hover:text-blue-700 underline"
-          >
-            {query}
-          </Link>
-        </div>
-      )}
+      </section>
+      {query && <ResultCard results={[{ label: query, href: query }]} revealSignal={submitCount} />}
     </>
   );
 };
