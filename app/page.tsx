@@ -11,7 +11,7 @@ export default function Home() {
           query builder tool
         </h1>
         <p className="text-center">
-          A tool to help you search for tweets on Twitter.
+          A tool to help you search for posts on X.
         </p>
         <MonthlyTweetForm />
         <div className="border-t border-gray-300 w-full max-w-md my-8"></div>
