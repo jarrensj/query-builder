@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import RestoreHandle from './RestoreHandle';
 import ResultCard from './ResultCard';
 
 const Form = () => {
@@ -65,6 +66,7 @@ const Form = () => {
                 autoComplete="off"
                 spellCheck={false}
               />
+              <RestoreHandle />
             </div>
             <div>
               <label htmlFor="keywords" className="field-label">
