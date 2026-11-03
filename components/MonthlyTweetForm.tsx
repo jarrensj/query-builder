@@ -3,6 +3,15 @@
 import { useState, useEffect } from 'react';
 import ResultCard from './ResultCard';
 
+// Runs as the page is parsed, so the first paint shows the current month and year instead of the
+// prerendered "Select Month" and "Select Year". The effect in MonthlyTweetForm then brings React's
+// state in line.
+const showCurrentDate = `{
+  const now = new Date();
+  document.getElementById('month').value = String(now.getMonth() + 1).padStart(2, '0');
+  document.getElementById('year').value = now.getFullYear();
+}`;
+
 const MonthlyTweetForm = () => {
   const [handle, setHandle] = useState('');
   const [month, setMonth] = useState('');
@@ -25,10 +34,14 @@ const MonthlyTweetForm = () => {
   ];
 
   // Generate years from 2006 (Twitter launch) to current year
+  // TODO: the prerendered list stops at the build year, so from New Year until the next deploy hydration
+  // fails on the missing option and React falls back to client rendering. Render it from a fixed list instead.
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: currentYear - 2006 + 1 }, (_, i) => currentYear - i);
 
   // Load handle from localStorage on component mount
+  // TODO: the saved handle (here and in Form) only appears after hydration, so returning visitors
+  // see those fields fill in, and the result below appears about 300ms later. Show them on first paint too.
   useEffect(() => {
     const savedHandle = localStorage.getItem('twitter-handle');
     if (savedHandle) {
@@ -145,6 +158,8 @@ const MonthlyTweetForm = () => {
               </select>
             </div>
           </div>
+
+          <script dangerouslySetInnerHTML={{ __html: showCurrentDate }} />
         </div>
       </section>
 
