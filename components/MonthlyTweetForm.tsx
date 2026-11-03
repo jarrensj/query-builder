@@ -1,6 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import RestoreHandle from './RestoreHandle';
 import ResultCard from './ResultCard';
 
 // Runs as the page is parsed, so the first paint shows the current month and year instead of the
@@ -17,6 +18,8 @@ const MonthlyTweetForm = () => {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [query, setQuery] = useState('');
+  // A restored handle's result shows as soon as the form hydrates. Only edits wait for the debounce.
+  const skipDebounce = useRef(false);
 
   const months = [
     { value: '01', label: 'January' },
@@ -40,12 +43,11 @@ const MonthlyTweetForm = () => {
   const years = Array.from({ length: currentYear - 2006 + 1 }, (_, i) => currentYear - i);
 
   // Load handle from localStorage on component mount
-  // TODO: the saved handle (here and in Form) only appears after hydration, so returning visitors
-  // see those fields fill in, and the result below appears about 300ms later. Show them on first paint too.
   useEffect(() => {
     const savedHandle = localStorage.getItem('twitter-handle');
     if (savedHandle) {
       setHandle(savedHandle);
+      skipDebounce.current = true;
     }
 
     // Set default month and year to current
@@ -68,7 +70,7 @@ const MonthlyTweetForm = () => {
   // Automatically update query when handle, month, or year changes
   useEffect(() => {
     if (handle && month && year) {
-      const timer = setTimeout(() => {
+      const updateQuery = () => {
         const yearNum = parseInt(year);
         const monthNum = parseInt(month);
         const daysInMonth = getDaysInMonth(yearNum, monthNum);
@@ -78,7 +80,15 @@ const MonthlyTweetForm = () => {
 
         const newQuery = `https://x.com/search?q=from%3A${encodeURIComponent(handle)}%20since%3A${sinceDate}%20until%3A${untilDate}&src=typed_query&f=live`;
         setQuery(newQuery);
-      }, 300);
+      };
+
+      if (skipDebounce.current) {
+        skipDebounce.current = false;
+        updateQuery();
+        return;
+      }
+
+      const timer = setTimeout(updateQuery, 300);
 
       return () => clearTimeout(timer);
     } else {
@@ -117,6 +127,7 @@ const MonthlyTweetForm = () => {
               autoComplete="off"
               spellCheck={false}
             />
+            <RestoreHandle />
           </div>
 
           <div className="field-row">
