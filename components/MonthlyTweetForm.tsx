@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import ResultCard from './ResultCard';
 
 // Runs as the page is parsed, so the first paint shows the current month and year instead of the
 // prerendered "Select Month" and "Select Year". The effect in MonthlyTweetForm then brings React's
@@ -17,7 +17,6 @@ const MonthlyTweetForm = () => {
   const [month, setMonth] = useState('');
   const [year, setYear] = useState('');
   const [query, setQuery] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const months = [
     { value: '01', label: 'January' },
@@ -48,7 +47,7 @@ const MonthlyTweetForm = () => {
     if (savedHandle) {
       setHandle(savedHandle);
     }
-    
+
     // Set default month and year to current
     const now = new Date();
     setMonth(String(now.getMonth() + 1).padStart(2, '0'));
@@ -69,7 +68,6 @@ const MonthlyTweetForm = () => {
   // Automatically update query when handle, month, or year changes
   useEffect(() => {
     if (handle && month && year) {
-      setIsLoading(true);
       const timer = setTimeout(() => {
         const yearNum = parseInt(year);
         const monthNum = parseInt(month);
@@ -80,7 +78,6 @@ const MonthlyTweetForm = () => {
 
         const newQuery = `https://x.com/search?q=from%3A${encodeURIComponent(handle)}%20since%3A${sinceDate}%20until%3A${untilDate}&src=typed_query&f=live`;
         setQuery(newQuery);
-        setIsLoading(false);
       }, 300);
 
       return () => clearTimeout(timer);
@@ -96,13 +93,13 @@ const MonthlyTweetForm = () => {
 
   return (
     <>
-      <div className="mt-8 w-full max-w-md">
-        <h2 className="text-lg font-bold mb-4 text-center">
+      <section className="card">
+        <h2 className="card-title">
           Monthly Tweet Summary
         </h2>
-        <div className="mb-4">
-          <div className="mb-4">
-            <label htmlFor="handle-monthly" className="block mb-2">
+        <div className="card-body">
+          <div>
+            <label htmlFor="handle-monthly" className="field-label">
               Twitter Handle:
             </label>
             <input
@@ -110,21 +107,28 @@ const MonthlyTweetForm = () => {
               id="handle-monthly"
               value={handle}
               onChange={handleHandleChange}
-              className="border p-2 w-full rounded"
+              onKeyDown={(e) => {
+                // This tool has no submit step, so Return just closes the on-screen keyboard.
+                if (e.key === 'Enter') e.currentTarget.blur();
+              }}
+              enterKeyHint="done"
+              className="field-input"
               placeholder="jarrensj"
+              autoComplete="off"
+              spellCheck={false}
             />
           </div>
-          
-          <div className="mb-4 grid grid-cols-2 gap-4">
+
+          <div className="field-row">
             <div>
-              <label htmlFor="month" className="block mb-2">
+              <label htmlFor="month" className="field-label">
                 Month:
               </label>
               <select
                 id="month"
                 value={month}
                 onChange={(e) => setMonth(e.target.value)}
-                className="border p-2 w-full rounded"
+                className="field-input"
               >
                 <option value="">Select Month</option>
                 {months.map((m) => (
@@ -134,16 +138,16 @@ const MonthlyTweetForm = () => {
                 ))}
               </select>
             </div>
-            
+
             <div>
-              <label htmlFor="year" className="block mb-2">
+              <label htmlFor="year" className="field-label">
                 Year:
               </label>
               <select
                 id="year"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
-                className="border p-2 w-full rounded"
+                className="field-input"
               >
                 <option value="">Select Year</option>
                 {years.map((y) => (
@@ -157,33 +161,13 @@ const MonthlyTweetForm = () => {
 
           <script dangerouslySetInnerHTML={{ __html: showCurrentDate }} />
         </div>
-      </div>
+      </section>
 
-      {isLoading && (
-        <div className="mt-4 w-full max-w-md">
-          <div className="bg-gray-100 p-4 rounded animate-pulse">
-            <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-            <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-          </div>
-        </div>
-      )}
-      
-      {!isLoading && query && (
-        <div className="mt-4 w-full max-w-md">
-          <div className="bg-gray-100 p-4 rounded">
-            <p className="mb-2 font-semibold">
-              Search for tweets from @{handle} in {getMonthName(month)} {year}:
-            </p>
-            <Link
-              href={query}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:text-blue-700 underline break-all text-sm"
-            >
-              Open Twitter Search →
-            </Link>
-          </div>
-        </div>
+      {query && (
+        <ResultCard
+          heading={`Search for tweets from @${handle} in ${getMonthName(month)} ${year}:`}
+          results={[{ label: 'Open Twitter Search →', href: query }]}
+        />
       )}
     </>
   );
