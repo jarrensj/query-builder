@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import cleanHandle from '../lib/cleanHandle';
+import RestoreHandle from './RestoreHandle';
 import ResultCard from './ResultCard';
 
 const Form = () => {
@@ -66,6 +67,7 @@ const Form = () => {
             autoComplete="off"
             spellCheck={false}
           />
+          <RestoreHandle />
         </div>
         <div className="form-row">
           <label htmlFor="keywords" className="form-label">
