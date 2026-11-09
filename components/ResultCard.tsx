@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 
 type Result = {
-  label: string;
+  // Only needed when there is more than one link.
+  label?: string;
   href: string;
 };
 
@@ -43,35 +44,31 @@ const ResultCard = ({ heading, results, revealSignal }: ResultCardProps) => {
   };
 
   return (
-    <section ref={cardRef} className="mt-3 grid gap-3 rounded-[10px] border border-line bg-white px-5 py-4">
-      {heading && <p className="font-medium">{heading}</p>}
-      <div className="grid gap-3.5">
+    <section ref={cardRef} className="mt-11 border-t-2 border-accent pt-4">
+      <h2 className="text-[12px] font-medium uppercase tracking-[0.06em] text-ink-muted">
+        {results.length > 1 ? 'Your links' : 'Your link'}
+      </h2>
+      {heading && <p className="mt-2 text-[17px] font-medium">{heading}</p>}
+      <div className="mt-3.5 grid gap-[22px]">
         {results.map(({ label, href }, index) => (
           <div key={index} className="grid gap-2.5">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
+            {label && <p className="text-[14px] font-medium text-ink-muted">{label}</p>}
+            <code className="block break-all font-mono text-[12.5px] leading-[1.6] text-ink-muted">
+              {href}
+            </code>
+            <div className="flex flex-wrap gap-2.5">
               <a
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`min-w-0 flex-[1_1_200px] text-[14px] font-medium text-accent underline underline-offset-[3px] hover:text-accent-hover ${
-                  label === href ? 'break-all' : '[overflow-wrap:anywhere]'
-                }`}
+                className="button-primary button-small"
               >
-                {label}
+                Open on X
               </a>
-              <button
-                type="button"
-                onClick={() => copy(href)}
-                className="rounded-md border border-line-strong bg-white px-2.5 py-[5px] text-[13px] text-ink-secondary hover:border-accent hover:text-accent"
-              >
-                {copiedHref === href ? 'Copied' : 'Copy'}
+              <button type="button" onClick={() => copy(href)} className="button-secondary">
+                {copiedHref === href ? 'Copied' : 'Copy link'}
               </button>
             </div>
-            {label !== href && (
-              <code className="block break-all rounded-md border border-line bg-ground px-3 py-2.5 font-mono text-[12.5px] text-ink-secondary">
-                {href}
-              </code>
-            )}
           </div>
         ))}
       </div>

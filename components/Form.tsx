@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import cleanHandle from '../lib/cleanHandle';
 import ResultCard from './ResultCard';
 
 const Form = () => {
@@ -25,13 +26,15 @@ const Form = () => {
   };
 
   const buildQuery = () => {
-    let queryParts = [];
+    const queryParts = [];
 
-    if (keywords) {
-      queryParts.push(keywords.split(' ').map((word: string) => encodeURIComponent(word)).join('%20'));
+    const words = keywords.trim();
+    if (words) {
+      queryParts.push(words.split(/\s+/).map((word) => encodeURIComponent(word)).join('%20'));
     }
-    if (handle) {
-      queryParts.push(`from%3A${handle}`);
+    const user = cleanHandle(handle);
+    if (user) {
+      queryParts.push(`from%3A${encodeURIComponent(user)}`);
     }
 
     if (queryParts.length > 0) {
@@ -48,47 +51,44 @@ const Form = () => {
 
   return (
     <>
-      <section className="card">
-        <form onSubmit={handleSubmit}>
-          <div className="card-body">
-            <div>
-              <label htmlFor="handle" className="field-label">
-                Tweet by:
-              </label>
-              <input
-                type="text"
-                id="handle"
-                value={handle}
-                onChange={handleHandleChange}
-                className="field-input"
-                placeholder="jarrensj"
-                autoComplete="off"
-                spellCheck={false}
-              />
-            </div>
-            <div>
-              <label htmlFor="keywords" className="field-label">
-                All these words must be found in the tweet:
-              </label>
-              <input
-                type="text"
-                id="keywords"
-                value={keywords}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeywords(e.target.value)}
-                className="field-input"
-                placeholder="hi"
-                autoComplete="off"
-              />
-            </div>
-          </div>
-          <div className="card-footer">
-            <button type="submit" className="button-primary">
-              Generate
-            </button>
-          </div>
-        </form>
-      </section>
-      {query && <ResultCard results={[{ label: query, href: query }]} revealSignal={submitCount} />}
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+          <label htmlFor="handle" className="form-label">
+            Posted by
+          </label>
+          <input
+            type="text"
+            id="handle"
+            value={handle}
+            onChange={handleHandleChange}
+            className="field-input"
+            placeholder="jarrensj"
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+        <div className="form-row">
+          <label htmlFor="keywords" className="form-label">
+            Must include
+          </label>
+          <input
+            type="text"
+            id="keywords"
+            value={keywords}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeywords(e.target.value)}
+            className="field-input"
+            placeholder="words separated by spaces"
+            autoComplete="off"
+          />
+        </div>
+        <div className="form-actions">
+          <p className="form-hint">Finds posts with every word, in any order. Opens on x.com in a new tab.</p>
+          <button type="submit" className="button-primary">
+            Build the link
+          </button>
+        </div>
+      </form>
+      {query && <ResultCard results={[{ href: query }]} revealSignal={submitCount} />}
     </>
   );
 };

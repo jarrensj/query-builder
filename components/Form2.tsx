@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react';
+import cleanHandle from '../lib/cleanHandle';
 import ResultCard from './ResultCard';
 
 const buildSearchUrl = (from: string, to: string) =>
@@ -13,77 +14,75 @@ const Form2 = () => {
   const [bothDirections, setBothDirections] = useState(false);
   const [submitCount, setSubmitCount] = useState(0);
 
+  const from = cleanHandle(user1);
+  const to = cleanHandle(user2);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setQuery(user1 && user2 ? buildSearchUrl(user1, user2) : '');
+    setQuery(from && to ? buildSearchUrl(from, to) : '');
     setSubmitCount((count) => count + 1);
   };
 
   const results = bothDirections
     ? [
-        { label: `search for tweets from ${user1} to ${user2}`, href: buildSearchUrl(user1, user2) },
-        { label: `search for tweets from ${user2} to ${user1}`, href: buildSearchUrl(user2, user1) },
+        { label: `From @${from} to @${to}`, href: buildSearchUrl(from, to) },
+        { label: `From @${to} to @${from}`, href: buildSearchUrl(to, from) },
       ]
-    : [{ label: query, href: query }];
+    : [{ href: query }];
 
   return (
     <>
-      <section className="card">
-        <h2 className="card-title">
-          Search for tweets between two users
-        </h2>
-        <form onSubmit={handleSubmit}>
-          <div className="card-body">
-            <div className="field-row">
-              <div>
-                <label htmlFor="user1" className="field-label">
-                  From User:
-                </label>
-                <input
-                  type="text"
-                  id="user1"
-                  value={user1}
-                  onChange={(e) => setUser1(e.target.value)}
-                  className="field-input"
-                  placeholder="jarrensj"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-              </div>
-              <div>
-                <label htmlFor="user2" className="field-label">
-                  To User:
-                </label>
-                <input
-                  type="text"
-                  id="user2"
-                  value={user2}
-                  onChange={(e) => setUser2(e.target.value)}
-                  className="field-input"
-                  placeholder="omakasemoney"
-                  autoComplete="off"
-                  spellCheck={false}
-                />
-              </div>
-            </div>
-            <label className="flex cursor-pointer items-center gap-2.5 text-[14px] text-ink-secondary">
-              <input
-                type="checkbox"
-                id="bothDirections"
-                checked={bothDirections}
-                onChange={(e) => setBothDirections(e.target.checked)}
-                className="h-4 w-4 accent-accent"
-              />
-              Create link for both directions
-            </label>
-          </div>
-          <div className="card-footer">
-            <button type="submit" className="button-primary">
-              Generate
-            </button>
-          </div>
-        </form>
-      </section>
+      <form onSubmit={handleSubmit}>
+        <div className="form-row">
+          <label htmlFor="user1" className="form-label">
+            From
+          </label>
+          <input
+            type="text"
+            id="user1"
+            value={user1}
+            onChange={(e) => setUser1(e.target.value)}
+            className="field-input"
+            placeholder="jarrensj"
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+        <div className="form-row">
+          <label htmlFor="user2" className="form-label">
+            To
+          </label>
+          <input
+            type="text"
+            id="user2"
+            value={user2}
+            onChange={(e) => setUser2(e.target.value)}
+            className="field-input"
+            placeholder="omakasemoney"
+            autoComplete="off"
+            spellCheck={false}
+          />
+        </div>
+        <div className="form-row">
+          <span className="form-label">Direction</span>
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              id="bothDirections"
+              checked={bothDirections}
+              onChange={(e) => setBothDirections(e.target.checked)}
+              className="h-4 w-4 shrink-0 accent-accent"
+            />
+            Both ways — build a second link for the replies back
+          </label>
+        </div>
+        <div className="form-actions">
+          <p className="form-hint">Opens on x.com in a new tab.</p>
+          <button type="submit" className="button-primary">
+            Build the link
+          </button>
+        </div>
+      </form>
       {query && <ResultCard results={results} revealSignal={submitCount} />}
     </>
   );
