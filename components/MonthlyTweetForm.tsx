@@ -111,7 +111,7 @@ const MonthlyTweetForm = () => {
           }}
           enterKeyHint="done"
           className="field-input"
-          placeholder="@handle"
+          placeholder="handle"
           autoComplete="off"
           spellCheck={false}
         />
