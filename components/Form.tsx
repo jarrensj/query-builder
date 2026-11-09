@@ -77,12 +77,12 @@ const Form = () => {
             value={keywords}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setKeywords(e.target.value)}
             className="field-input"
-            placeholder="every one of these words"
+            placeholder="words separated by spaces"
             autoComplete="off"
           />
         </div>
         <div className="form-actions">
-          <p className="form-hint">Separate words with spaces. Opens on x.com in a new tab.</p>
+          <p className="form-hint">Finds posts with every word, in any order. Opens on x.com in a new tab.</p>
           <button type="submit" className="button-primary">
             Build the link
           </button>
