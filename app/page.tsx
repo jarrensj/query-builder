@@ -4,8 +4,8 @@ import ToolSwitcher from "../components/ToolSwitcher";
 export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="border-b border-line px-5 sm:px-6">
-        <div className="mx-auto flex min-h-[56px] max-w-[720px] items-center">
+      <header className="border-b border-line">
+        <div className="mx-auto flex min-h-[56px] max-w-[720px] items-center px-5 sm:px-6">
           <span className="text-[15px] font-semibold tracking-[-0.01em]">
             QueryBuilder
           </span>
