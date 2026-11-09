@@ -43,7 +43,7 @@ const Form2 = () => {
             value={user1}
             onChange={(e) => setUser1(e.target.value)}
             className="field-input"
-            placeholder="handle"
+            placeholder="jarrensj"
             autoComplete="off"
             spellCheck={false}
           />
@@ -58,7 +58,7 @@ const Form2 = () => {
             value={user2}
             onChange={(e) => setUser2(e.target.value)}
             className="field-input"
-            placeholder="handle"
+            placeholder="omakasemoney"
             autoComplete="off"
             spellCheck={false}
           />

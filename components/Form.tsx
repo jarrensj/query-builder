@@ -62,7 +62,7 @@ const Form = () => {
             value={handle}
             onChange={handleHandleChange}
             className="field-input"
-            placeholder="handle"
+            placeholder="jarrensj"
             autoComplete="off"
             spellCheck={false}
           />
