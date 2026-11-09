@@ -7,7 +7,7 @@ export default function Home() {
       <header className="border-b border-line px-5 sm:px-6">
         <div className="mx-auto flex min-h-[56px] max-w-[720px] items-center">
           <span className="text-[15px] font-semibold tracking-[-0.01em]">
-            query builder
+            QueryBuilder
           </span>
         </div>
       </header>
