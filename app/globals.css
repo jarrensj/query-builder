@@ -30,6 +30,16 @@
     @apply cursor-pointer appearance-none pr-9;
   }
 
+  /* A text field's height, set outright: Chrome draws date fields 2px taller, and iOS Safari collapses them
+     while empty. iOS also centers the value. */
+  .field-date {
+    height: calc(1.4em + 20px);
+  }
+
+  .field-date::-webkit-date-and-time-value {
+    text-align: left;
+  }
+
   .button-primary {
     @apply rounded-md bg-accent px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-accent-hover;
   }
