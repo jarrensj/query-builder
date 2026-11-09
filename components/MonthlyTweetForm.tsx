@@ -1,11 +1,12 @@
 'use client'
 
 import { useState, useEffect } from 'react';
+import cleanHandle from '../lib/cleanHandle';
 import ResultCard from './ResultCard';
 
 // Runs as the page is parsed, so the first paint shows the current month and year instead of the
-// prerendered "Select Month" and "Select Year". The effect in MonthlyTweetForm then brings React's
-// state in line.
+// prerendered first options (January and the build year). The effect in MonthlyTweetForm then brings
+// React's state in line.
 const showCurrentDate = `{
   const now = new Date();
   document.getElementById('month').value = String(now.getMonth() + 1).padStart(2, '0');
@@ -65,9 +66,11 @@ const MonthlyTweetForm = () => {
     return new Date(year, month, 0).getDate();
   };
 
+  const user = cleanHandle(handle);
+
   // Automatically update query when handle, month, or year changes
   useEffect(() => {
-    if (handle && month && year) {
+    if (user && month && year) {
       const timer = setTimeout(() => {
         const yearNum = parseInt(year);
         const monthNum = parseInt(month);
@@ -76,7 +79,7 @@ const MonthlyTweetForm = () => {
         const sinceDate = `${year}-${month}-01`;
         const untilDate = `${year}-${month}-${String(daysInMonth).padStart(2, '0')}`;
 
-        const newQuery = `https://x.com/search?q=from%3A${encodeURIComponent(handle)}%20since%3A${sinceDate}%20until%3A${untilDate}&src=typed_query&f=live`;
+        const newQuery = `https://x.com/search?q=from%3A${encodeURIComponent(user)}%20since%3A${sinceDate}%20until%3A${untilDate}&src=typed_query&f=live`;
         setQuery(newQuery);
       }, 300);
 
@@ -84,7 +87,7 @@ const MonthlyTweetForm = () => {
     } else {
       setQuery('');
     }
-  }, [handle, month, year]);
+  }, [user, month, year]);
 
   const getMonthName = (monthValue: string) => {
     const monthObj = months.find(m => m.value === monthValue);
@@ -93,84 +96,87 @@ const MonthlyTweetForm = () => {
 
   return (
     <>
-      <section className="card">
-        <h2 className="card-title">
-          Monthly Tweet Summary
-        </h2>
-        <div className="card-body">
-          <div>
-            <label htmlFor="handle-monthly" className="field-label">
-              Twitter Handle:
-            </label>
-            <input
-              type="text"
-              id="handle-monthly"
-              value={handle}
-              onChange={handleHandleChange}
-              onKeyDown={(e) => {
-                // This tool has no submit step, so Return just closes the on-screen keyboard.
-                if (e.key === 'Enter') e.currentTarget.blur();
-              }}
-              enterKeyHint="done"
-              className="field-input"
-              placeholder="jarrensj"
-              autoComplete="off"
-              spellCheck={false}
-            />
+      <div className="form-row">
+        <label htmlFor="handle-monthly" className="form-label">
+          Posted by
+        </label>
+        <input
+          type="text"
+          id="handle-monthly"
+          value={handle}
+          onChange={handleHandleChange}
+          onKeyDown={(e) => {
+            // This tool has no submit step, so Return just closes the on-screen keyboard.
+            if (e.key === 'Enter') e.currentTarget.blur();
+          }}
+          enterKeyHint="done"
+          className="field-input"
+          placeholder="@handle"
+          autoComplete="off"
+          spellCheck={false}
+        />
+      </div>
+
+      <div className="form-row">
+        <span className="form-label">During</span>
+        <div className="flex flex-wrap gap-2.5">
+          <div className="relative flex-[1_1_140px]">
+            <select
+              id="month"
+              aria-label="Month"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+              className="field-input field-select"
+            >
+              {months.map((m) => (
+                <option key={m.value} value={m.value}>
+                  {m.label}
+                </option>
+              ))}
+            </select>
+            <SelectCaret />
           </div>
 
-          <div className="field-row">
-            <div>
-              <label htmlFor="month" className="field-label">
-                Month:
-              </label>
-              <select
-                id="month"
-                value={month}
-                onChange={(e) => setMonth(e.target.value)}
-                className="field-input"
-              >
-                <option value="">Select Month</option>
-                {months.map((m) => (
-                  <option key={m.value} value={m.value}>
-                    {m.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label htmlFor="year" className="field-label">
-                Year:
-              </label>
-              <select
-                id="year"
-                value={year}
-                onChange={(e) => setYear(e.target.value)}
-                className="field-input"
-              >
-                <option value="">Select Year</option>
-                {years.map((y) => (
-                  <option key={y} value={y}>
-                    {y}
-                  </option>
-                ))}
-              </select>
-            </div>
+          <div className="relative flex-[1_1_110px]">
+            <select
+              id="year"
+              aria-label="Year"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
+              className="field-input field-select"
+            >
+              {years.map((y) => (
+                <option key={y} value={y}>
+                  {y}
+                </option>
+              ))}
+            </select>
+            <SelectCaret />
           </div>
 
           <script dangerouslySetInnerHTML={{ __html: showCurrentDate }} />
         </div>
-      </section>
+      </div>
+
+      <p className="form-hint pt-5">The link updates as you type — no button needed.</p>
 
       {query && (
         <ResultCard
-          heading={`Search for tweets from @${handle} in ${getMonthName(month)} ${year}:`}
-          results={[{ label: 'Open Twitter Search →', href: query }]}
+          heading={`Posts from @${user} in ${getMonthName(month)} ${year}`}
+          results={[{ href: query }]}
         />
       )}
     </>
   );
 };
+
+const SelectCaret = () => (
+  <span
+    aria-hidden="true"
+    className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-ink-muted"
+  >
+    ▼
+  </span>
+);
 
 export default MonthlyTweetForm;

@@ -3,37 +3,42 @@
 @tailwind utilities;
 
 @layer components {
-  .card {
-    @apply mt-4 overflow-hidden rounded-[10px] border border-line bg-white;
+  /* One field per row: label beside the field on wider screens, above it on phones. */
+  .form-row {
+    @apply grid grid-cols-[minmax(0,1fr)] items-center gap-x-6 gap-y-2 border-b border-line py-3.5 sm:grid-cols-[176px_minmax(0,1fr)];
   }
 
-  .card-title {
-    @apply border-b border-line-soft px-5 py-3.5 text-[15px] font-semibold;
+  .form-label {
+    @apply text-[13px] font-medium text-ink-muted;
   }
 
-  .card-body {
-    @apply grid gap-4 p-5;
+  /* The hint and the submit button under a form's fields. */
+  .form-actions {
+    @apply flex flex-wrap items-center justify-between gap-x-4 gap-y-3 pt-5;
   }
 
-  .card-footer {
-    @apply flex justify-end border-t border-line-soft bg-surface-muted px-5 py-3;
+  .form-hint {
+    @apply text-[13px] text-ink-muted;
   }
 
-  /* Two fields side by side, collapsing to one column when they no longer fit. */
-  .field-row {
-    @apply grid grid-cols-[repeat(auto-fit,minmax(150px,1fr))] gap-4;
-  }
-
-  .field-label {
-    @apply mb-1.5 block text-[13px] font-medium text-ink-secondary;
-  }
-
-  /* 16px on touch devices because iOS Safari zooms the page when focusing fields under 16px. */
+  /* 16px text, because iOS Safari zooms the page when focusing a field under 16px. */
   .field-input {
-    @apply block w-full rounded-md border border-line-strong bg-white px-[11px] py-2 text-[15px] text-ink outline-none placeholder:text-placeholder focus:border-accent focus:shadow-focus [@media(pointer:coarse)]:text-[16px];
+    @apply block w-full rounded-lg border border-line bg-white px-3 py-[9px] text-[16px] leading-[1.4] text-ink outline-none placeholder:text-placeholder hover:border-line-strong focus:border-accent focus:shadow-focus;
+  }
+
+  .field-select {
+    @apply cursor-pointer appearance-none pr-9;
   }
 
   .button-primary {
-    @apply rounded-md bg-accent px-4 py-2 text-[14px] font-medium text-white hover:bg-accent-hover;
+    @apply rounded-md bg-accent px-[18px] py-2.5 text-[14px] font-medium text-white hover:bg-accent-hover;
+  }
+
+  .button-small {
+    @apply px-3.5 py-2 text-[13.5px];
+  }
+
+  .button-secondary {
+    @apply rounded-md border border-line px-3.5 py-2 text-[13.5px] font-medium text-ink-muted hover:border-ink hover:text-ink;
   }
 }

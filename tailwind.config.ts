@@ -14,26 +14,19 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-        ground: "#f4f3ef",
-        "surface-muted": "#fafaf7",
+        ground: "#f6f5f1",
         line: {
           DEFAULT: "#e2dfd8",
-          soft: "#eeebe4",
-          strong: "#d6d2c9",
-        },
-        track: {
-          DEFAULT: "#e8e5dd",
-          line: "#dcd8ce",
+          strong: "#b9b4a9",
         },
         ink: {
           DEFAULT: "#1c1b19",
-          secondary: "#3f3c36",
           muted: "#6b675f",
         },
         placeholder: "#9a958b",
         accent: {
-          DEFAULT: "#2b63d9",
-          hover: "#2453b8",
+          DEFAULT: "#1c1b19",
+          hover: "#000000",
         },
       },
       fontFamily: {
@@ -41,8 +34,7 @@ const config: Config = {
         mono: ["var(--font-plex-mono)", "ui-monospace", "Menlo", "monospace"],
       },
       boxShadow: {
-        focus: "0 0 0 3px rgba(43, 99, 217, 0.15)",
-        "tab-active": "0 0 0 1px #d6d2c9",
+        focus: "0 0 0 3px rgba(28, 27, 25, 0.12)",
       },
     },
   },
