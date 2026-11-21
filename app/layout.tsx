@@ -21,6 +21,9 @@ const plexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "query builder",
   description: "query builder",
+  icons: {
+    icon: { url: "/brickBrain.svg", type: "image/svg+xml" },
+  },
 };
 
 export default function RootLayout({
