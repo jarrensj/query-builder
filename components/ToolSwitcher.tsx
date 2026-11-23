@@ -3,11 +3,12 @@
 import { useEffect, useState } from 'react';
 import Form from './Form';
 import Form2 from './Form2';
-import MonthlyTweetForm from './MonthlyTweetForm';
+import TimeFrameForm from './TimeFrameForm';
 
 const tools = [
   { id: 'keyword', label: 'Keywords', Tool: Form },
-  { id: 'monthly', label: 'Monthly', Tool: MonthlyTweetForm },
+  // Still 'monthly' so visitors whose saved tool is the old Monthly tab reopen this one.
+  { id: 'monthly', label: 'Date Time Frame', Tool: TimeFrameForm },
   { id: 'between', label: 'Between users', Tool: Form2 },
 ];
 
