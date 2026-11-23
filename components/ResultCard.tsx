@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react';
+import Toast from './Toast';
 
 type Result = {
   // Only needed when there is more than one link.
@@ -15,10 +16,16 @@ type ResultCardProps = {
   revealSignal?: number;
 };
 
-const COPIED_LABEL_MS = 1500;
+// How long the "Copied" label and the toast stay up.
+const COPY_FEEDBACK_MS = 2000;
+
+type CopyAttempt = {
+  href: string;
+  copied: boolean;
+};
 
 const ResultCard = ({ heading, results, revealSignal }: ResultCardProps) => {
-  const [copiedHref, setCopiedHref] = useState('');
+  const [copyAttempt, setCopyAttempt] = useState<CopyAttempt | null>(null);
   const copiedTimer = useRef<ReturnType<typeof setTimeout>>();
   const cardRef = useRef<HTMLElement>(null);
 
@@ -33,15 +40,22 @@ const ResultCard = ({ heading, results, revealSignal }: ResultCardProps) => {
   }, [revealSignal]);
 
   const copy = async (href: string) => {
+    let copied = true;
     try {
       await navigator.clipboard.writeText(href);
     } catch {
-      return; // Clipboard unavailable or denied: leave the label as "Copy".
+      copied = false; // Clipboard unavailable or denied. The toast says so, and the label stays "Copy link".
     }
-    setCopiedHref(href);
+    setCopyAttempt({ href, copied });
     clearTimeout(copiedTimer.current);
-    copiedTimer.current = setTimeout(() => setCopiedHref(''), COPIED_LABEL_MS);
+    copiedTimer.current = setTimeout(() => setCopyAttempt(null), COPY_FEEDBACK_MS);
   };
+
+  const toastMessage = !copyAttempt
+    ? ''
+    : copyAttempt.copied
+      ? 'Link copied'
+      : "Couldn't copy. Select the link and copy it instead.";
 
   return (
     <section ref={cardRef} className="mt-11 border-t-2 border-accent pt-4">
@@ -66,12 +80,13 @@ const ResultCard = ({ heading, results, revealSignal }: ResultCardProps) => {
                 Open on X
               </a>
               <button type="button" onClick={() => copy(href)} className="button-secondary">
-                {copiedHref === href ? 'Copied' : 'Copy link'}
+                {copyAttempt?.copied && copyAttempt.href === href ? 'Copied' : 'Copy link'}
               </button>
             </div>
           </div>
         ))}
       </div>
+      <Toast message={toastMessage} />
     </section>
   );
 };
